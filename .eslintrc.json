@@ -11,16 +11,18 @@
 		"plugin:import/errors",
 		"plugin:import/warnings"
 	],
+	"parser": "@babel/eslint-parser",
 	"parserOptions": {
 		"ecmaFeatures": {
 			"jsx": true
 		},
 		"ecmaVersion": 12,
+		"requireConfigFile": false,
 		"sourceType": "module"
 	},
 	"plugins": ["react", "prettier", "import"],
 	"rules": {
-		"indent": ["error", 3],
+		"indent": ["error", "tab"],
 		"prettier/prettier": "error",
 		"quotes": ["error", "single"],
 		"react/react-in-jsx-scope": "off",

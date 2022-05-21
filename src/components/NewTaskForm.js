@@ -12,14 +12,14 @@ export default class NewTaskForm extends React.Component {
 	static defaultProps = {
 		value: '',
 		placeholder: 'Placeholder',
-		eventChange_onlooker: () => {}
-	}
+		eventChange_onlooker: () => {},
+	};
 
 	static propTypes = {
 		value: PropTypes.string,
 		placeholder: PropTypes.string,
-		eventChange_onlooker: PropTypes.func
-	}
+		eventChange_onlooker: PropTypes.func,
+	};
 
 	/* handleChange = (e) => {
 		const v = e.target.value;
@@ -28,12 +28,15 @@ export default class NewTaskForm extends React.Component {
 	} */
 
 	render() {
-		return <input
-			className='new-todo'
-			value={this.props.value}
-			placeholder={this.props.placeholder}
-			onChange={this.props.eventChange_onlooker}
-			/* onChange={this.handleChange */
-			autoFocus />;
+		return (
+			<input
+				className='new-todo'
+				value={this.props.value}
+				placeholder={this.props.placeholder}
+				onChange={this.props.eventChange_onlooker}
+				/* onChange={this.handleChange */
+				autoFocus
+			/>
+		);
 	}
 }
