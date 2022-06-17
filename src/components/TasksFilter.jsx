@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './TasksFilter.css';
 
+
 export default function TasksFilter({ taskOnFilter }) {
 	return (
 		<ul className='filters'>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TasksFilter from './TasksFilter';
 import './Footer.css';
 
+
 export default function Footer({ tasksLeft, eventRemoveFulfilled_onlooker, eventFilter_onlooker }) {
 	return (
 		<footer className='footer'>
