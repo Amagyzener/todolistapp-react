@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import NewTaskForm from './components/NewTaskForm';
 import TaskList from './components/TaskList';
@@ -22,9 +22,20 @@ export default function App() {
 		]
 	);
 	const [NewTaskForm_value, NewTaskForm_setValue] = useState('');
-	// { id: secs }
-	/* timers: { } */
+	let [needToFilter, applyFilter] = useState(false); // [1] «костыльный» вариант: React — отстой
 	let nextId = data[data.length - 1]?.id ?? 0; // find the last item’s id or set it to 0
+
+	useEffect(() => {
+		const filter = document.querySelector('button.selected').textContent.toLowerCase();
+
+		const newData = new Array(...data);
+		newData.forEach(task => {
+			(task.hidden && (task.hidden = !task.hidden))
+				|| (filter == 'active' && task.fulfilled && (task.hidden = !task.hidden))
+				|| (filter == 'completed' && !task.fulfilled && (task.hidden = !task.hidden));
+		});
+		updateData(newData);
+	}, [needToFilter]); // [2] «костыльный» вариант: React — отстой
 
 	function _toggleProperty(array, id, prop) {
 		const [newData, idx] = handleArray(array, Array.prototype.findIndex, task => task.id === id);
@@ -34,12 +45,18 @@ export default function App() {
 
 	function _toggleTask(id) {
 		updateData(_toggleProperty(data, id, 'fulfilled'));
+		applyFilter(!needToFilter); // [3] «костыльный» вариант: React — отстой
 	}
 
 	function _createTask(e) {
 		e.preventDefault();
 
-		updateData([...data, { id: ++nextId, content: NewTaskForm_value || 'A new task to do', created: new Date }]);
+		if (document.querySelector('button.selected').textContent.toLowerCase() == 'completed')
+			return alert('На этой вкладке нельзя добавлять заметки!');
+		if (!NewTaskForm_value.length)
+			return alert('Поле ввода не должно быть пустым!');
+
+		updateData([...data, { id: ++nextId, content: NewTaskForm_value, created: new Date }]);
 		NewTaskForm_setValue('');
 	}
 
@@ -59,9 +76,11 @@ export default function App() {
 	}
 
 	function _filterTasks(filter, e) {
-		for (const btn of e.target.closest('.filters').querySelectorAll('button'))
-			if (btn.classList.contains('selected')) btn.classList.remove('selected');
-		e.target.classList.toggle('selected');
+		if (e) {
+			for (const btn of e.target.closest('.filters').querySelectorAll('button'))
+				if (btn.classList.contains('selected')) btn.classList.remove('selected');
+			e.target.classList.toggle('selected');
+		}
 
 		const newData = new Array(...data);
 		newData.forEach(task => {
@@ -90,14 +109,6 @@ export default function App() {
 						value={NewTaskForm_value}
 						eventChange_onlooker={(e) => _handleInputChange(e)}
 					/>
-					{/* <NewTaskForm placeholder='min' />
-					<NewTaskForm placeholder='sec' /> */}
-					{/* <NewTaskForm
-						type='number'
-						placeholder='min'
-						value={NewTaskForm_value}
-						eventChange_onlooker={(e) => _handleInputChange(e)}
-					/> */}
 					<button className='icon icon-add' type='submit'></button>
 				</form>
 			</header>
